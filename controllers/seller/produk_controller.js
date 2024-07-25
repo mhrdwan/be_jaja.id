@@ -163,4 +163,45 @@ async function updateProduk(req, res, next) {
   }
 }
 
-module.exports = { produkDetail, getProdukUser, deleteProduk, updateProduk };
+async function lisDiskonToko(req, res, next) {
+    const userId = req.user.id_customer;
+    const limit = parseInt(req.query.limit) || 10; 
+    const page = parseInt(req.query.page) || 1; 
+    const offset = (page - 1) * limit;
+  
+    try {
+      const { count, rows } = await produk.findAndCountAll({
+        where: { id_user: userId },
+        limit: limit,
+        offset: offset,
+      });
+  
+      res.json({
+        code: 200,
+        message: "Berhasil Mendapatkan Produk",
+        totalData: count,
+        totalPages: Math.ceil(count / limit),
+        currentPage: page,
+        data: rows.map((item, index) => {
+          return {
+            no: offset + index + 1,
+            stok: item.stok,
+            nama_produk: item.nama_produk,
+            harga: item.harga,
+            diskon: item.diskon,
+          };
+        }),
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  
+
+module.exports = {
+  produkDetail,
+  getProdukUser,
+  deleteProduk,
+  updateProduk,
+  lisDiskonToko,
+};
