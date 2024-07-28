@@ -3,6 +3,7 @@ const { customer, produk, toko } = require("../../models");
 const { v4: uuidv4 } = require("uuid");
 
 const { buatHashPassword, kirimEmai } = require("../../core/function");
+const { hariIni, waktuSekarang } = require("../../core/config");
 
 async function randomAngka() {
   const min = Math.floor(Math.random() * (100000 - 10000) + 10000);
@@ -48,8 +49,8 @@ async function createUser(req, res, next) {
       nama_lengkap: req.body.first_name + " " + req.body.last_name,
       email: req.body.email,
       password: passwordHash,
-      created_date: new Date(),
-      created_time: new Date().getTime(),
+      created_date: hariIni,
+      created_time: waktuSekarang,
       username: req.body.username,
       code_secret: String(kodeVerif),
       from_login: req.body.from_login || "website",
