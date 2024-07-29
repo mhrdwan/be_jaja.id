@@ -1,5 +1,5 @@
 const { suksesMessage, errorMessage } = require("../../core/message");
-const { produk } = require("../../models");
+const { produk, produk_variasi } = require("../../models");
 
 async function getProdukUser(req, res, next) {
   const userId = req.user.id_customer;
@@ -137,7 +137,7 @@ async function updateProduk(req, res, next) {
     grosir_price5,
     diskon,
     variasi_harga,
-    stok,
+
     kondisi,
     masa_pengemasan,
     pre_order,
@@ -149,6 +149,9 @@ async function updateProduk(req, res, next) {
     status_pilih,
     { where: { id_produk: req.body.id_produk } }
   );
+  const dbstock = await produk_variasi.update(stok, {
+    where: { id_produk: req.body.id_produk },
+  });
   res.json({
     code: 200,
     message: "Berhasil Mengubah Produk",
@@ -164,39 +167,51 @@ async function updateProduk(req, res, next) {
 }
 
 async function lisDiskonToko(req, res, next) {
-    const userId = req.user.id_customer;
-    const limit = parseInt(req.query.limit) || 10; 
-    const page = parseInt(req.query.page) || 1; 
-    const offset = (page - 1) * limit;
-  
-    try {
-      const { count, rows } = await produk.findAndCountAll({
-        where: { id_user: userId },
+  const userId = req.user.id_customer;
+  const limit = parseInt(req.query.limit) || 10;
+  const page = parseInt(req.query.page) || 1;
+  const offset = (page - 1) * limit;
+  produk.hasMany(produk_variasi, {
+    foreignKey: "id_produk",
+  });
+  const { count, rows } = await produk.findAndCountAll({
+    where: { id_user: userId },
+    include: [
+      {
+        model: produk_variasi,
+        required: true,
         limit: limit,
         offset: offset,
-      });
-  
-      res.json({
-        code: 200,
-        message: "Berhasil Mendapatkan Produk",
-        totalData: count,
-        totalPages: Math.ceil(count / limit),
-        currentPage: page,
-        data: rows.map((item, index) => {
-          return {
-            no: offset + index + 1,
-            stok: item.stok,
-            nama_produk: item.nama_produk,
-            harga: item.harga,
-            diskon: item.diskon,
-          };
-        }),
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-  
+      },
+    ],
+  });
+
+  const data2 = rows.map((produk, index) => {
+    const produkData = produk.dataValues;
+    const produkVariasi =
+      produk.produk_variasis.length > 0
+        ? produk.produk_variasis[0].dataValues
+        : {};
+
+    const combinedData = {
+      no: index,
+      ...produkData,
+      ...produkVariasi,
+    };
+
+    delete combinedData.produk_variasis;
+
+    return combinedData;
+  });
+  res.json({
+    totalData: count,
+    totalPages: Math.ceil(count / limit),
+    currentPage: page,
+    data: data2,
+  });
+}
+
+async function updateDiskon(req, res, next) {}
 
 module.exports = {
   produkDetail,
@@ -204,4 +219,5 @@ module.exports = {
   deleteProduk,
   updateProduk,
   lisDiskonToko,
+  updateDiskon
 };

@@ -29,7 +29,7 @@ async function login(req, res) {
         id_customer: customer.id_customer,
         email: customer.email,
         verifikasi: customer.verifikasi,
-        nama_lengkap: customer.nama_lengkap
+        nama_lengkap: customer.nama_lengkap,
       };
 
       if (customer.verifikasi === "T") {
@@ -38,7 +38,6 @@ async function login(req, res) {
           message: "User belum verifikasi, silahkan verifikasi terlebih dahulu",
         });
       }
-
       const token = jwt.sign(payload, secretKey, { expiresIn: "3d" });
 
       res.cookie("token", token, {
@@ -66,4 +65,16 @@ async function login(req, res) {
   }
 }
 
-module.exports = { login };
+async function logout(req, res) {
+  res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "strict",
+  });
+
+  res.status(200).json({
+    status: 200,
+    message: "Logout berhasil",
+  });
+}
+
+module.exports = { login ,logout};
