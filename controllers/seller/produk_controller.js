@@ -211,7 +211,82 @@ async function lisDiskonToko(req, res, next) {
   });
 }
 
-async function updateDiskon(req, res, next) {}
+async function updateDiskon(req, res, next) {
+  produk.hasOne(produk_variasi, {
+    foreignKey: "id_produk",
+  });
+  const {
+    id_produk,
+    presentase_diskon,
+    tgl_mulai_diskon,
+    tgl_berakhir_diskon,
+    harga_normal,
+    harga_variasi,
+    nominal_diskon,
+  } = req.body;
+  if (!id_produk) {
+    return res.status(400).json({
+      code: 400,
+      message: "id_produk dibutuhkan",
+    });
+  }
+  try {
+    const produkOwned = await produk.findOne({
+      where: { id_produk: id_produk, id_user: req.user.id_customer },
+      include: [
+        {
+          model: produk_variasi,
+        },
+      ],
+    });
+
+    if (!produkOwned) {
+      return res.status(404).json({
+        code: 404,
+        message: "User dengan Produk tersebut Tidak Ditemukan",
+      });
+    }
+
+    if (!presentase_diskon) {
+      return res.status(404).json({
+        code: 404,
+        message: "presentase_diskon dibutuhkan",
+      });
+    } else if (!nominal_diskon) {
+      return res.status(404).json({
+        code: 404,
+        message: "nominal_diskon dibutuhkan",
+      });
+    }
+
+    const updatedb = await produk_variasi.update(
+      {
+        presentase_diskon,
+        tgl_mulai_diskon,
+        tgl_berakhir_diskon,
+        harga_normal,
+        harga_variasi,
+        nominal_diskon,
+      },
+      {
+        where: { id_produk: id_produk },
+        returning: true,
+        plain: true,
+      }
+    );
+
+    res.json({
+      code: 200,
+      message: "Berhasil Mengubah Diskon",
+      data: updatedb[1],
+    });
+  } catch (error) {
+    res.status(500).json({
+      code: 500,
+      message: error.message,
+    });
+  }
+}
 
 module.exports = {
   produkDetail,
@@ -219,5 +294,5 @@ module.exports = {
   deleteProduk,
   updateProduk,
   lisDiskonToko,
-  updateDiskon
+  updateDiskon,
 };
