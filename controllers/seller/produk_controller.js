@@ -278,7 +278,6 @@ async function updateDiskon(req, res, next) {
     res.json({
       code: 200,
       message: "Berhasil Mengubah Diskon",
-      data: updatedb[1],
     });
   } catch (error) {
     res.status(500).json({
