@@ -9,7 +9,11 @@ var usersRouter = require("./routes/seller/users");
 var brandRouter = require("./routes/seller/brand");
 var produkRouter = require("./routes/seller/produk");
 var etalaseRouter = require("./routes/seller/etalase");
+var dompetkuRouter = require("./routes/seller/dompetku");
+var rekeningRouter = require("./routes/seller/rekening_bank");
 var vouceherRouter = require("./routes/seller/voucher");
+var reviewRouter = require("./routes/seller/review");
+var reportRouter = require("./routes/seller/report");
 const getListOrders = require("./controllers/seller/list_controller");
 
 var app = express();
@@ -34,7 +38,11 @@ app.use("/v1/brand", brandRouter);
 //etalase
 app.use("/v1/etalase", etalaseRouter);
 app.use("/v1/voucher", vouceherRouter);
+app.use("/v1/rekening", rekeningRouter);
 // catch 404 and forward to error handler
+app.use("/v1/dompetku", dompetkuRouter);
+app.use("/v1/review", reviewRouter);
+app.use("/v1/report", reportRouter);
 //produk
 app.use("/v1/produk", produkRouter);
 app.use(function (req, res, next) {

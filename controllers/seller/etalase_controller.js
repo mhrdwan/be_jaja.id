@@ -8,7 +8,7 @@ async function getEtalase(req, res, next) {
     const offset = (page - 1) * limit;
 
     const response = await etalase_toko.findAll({
-      where: { id_toko: req.query.id_toko },
+      where: { id_toko: req.user.id_toko },
       limit: limit,
       offset: offset,
     });

@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { customer: Customer } = require("../../../models");
+const { customer: Customer, toko } = require("../../../models");
 const { comparePassword } = require("../../../core/function");
 const secretKey = process.env.SECRET_KEY;
 require("dotenv").config();
@@ -24,12 +24,17 @@ async function login(req, res) {
       customer.dataValues.password
     );
 
+    const cekToko = await toko.findOne({
+      where: { id_user: customer.id_customer },
+    });
+
     if (passwordHash) {
       const payload = {
         id_customer: customer.id_customer,
         email: customer.email,
         verifikasi: customer.verifikasi,
         nama_lengkap: customer.nama_lengkap,
+        id_toko: cekToko.id_toko,
       };
 
       if (customer.verifikasi === "T") {
@@ -50,6 +55,7 @@ async function login(req, res) {
       res.json({
         status: 200,
         message: "Login berhasil",
+        // cekToko: cekToko,
       });
     } else {
       res.status(401).json({
@@ -77,4 +83,4 @@ async function logout(req, res) {
   });
 }
 
-module.exports = { login ,logout};
+module.exports = { login, logout };
