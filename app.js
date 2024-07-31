@@ -14,6 +14,8 @@ var rekeningRouter = require("./routes/seller/rekening_bank");
 var vouceherRouter = require("./routes/seller/voucher");
 var reviewRouter = require("./routes/seller/review");
 var reportRouter = require("./routes/seller/report");
+var pengaturanRouter = require("./routes/seller/pengaturan");
+var selectRouter = require("./routes/seller/select");
 const getListOrders = require("./controllers/seller/list_controller");
 
 var app = express();
@@ -43,6 +45,8 @@ app.use("/v1/rekening", rekeningRouter);
 app.use("/v1/dompetku", dompetkuRouter);
 app.use("/v1/review", reviewRouter);
 app.use("/v1/report", reportRouter);
+app.use("/v1/pengaturan", pengaturanRouter);
+app.use("/v1/select", selectRouter);
 //produk
 app.use("/v1/produk", produkRouter);
 app.use(function (req, res, next) {

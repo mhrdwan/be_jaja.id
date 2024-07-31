@@ -1,7 +1,7 @@
 const express = require("express");
 const { validateCreateUser } = require("../../middleware/validasi/createUser");
 const authenticateJWT = require("../../middleware/auth");
-const { listRating,detailRating } = require("../../controllers/seller/review");
+const { listRating,detailRating } = require("../../controllers/seller/review_controller");
 const router = express.Router();
 
 router.get("/get-list-review", authenticateJWT, listRating);
