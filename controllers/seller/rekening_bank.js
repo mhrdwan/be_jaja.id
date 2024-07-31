@@ -19,13 +19,18 @@ async function listRekeningBank(req, res, next) {
 }
 
 async function detailRekeningBank(req, res, next) {
+  const id_toko = req.user.id_toko;
+  const db = await toko_payouts.findOne({
+    where: { id_toko: id_toko, id_payouts: req.query.id_payouts },
+  });
   try {
-    const db = await toko_payouts.findOne({
-      where: { id_payouts: req.query.id_payouts },
-    });
-    if (db.length < 1) {
+    if (db?.length < 1) {
       return res.json({ status: 404, message: "Toko belum ada rekening!" });
     }
+    if (db == null) {
+      return res.json({ status: 404, message: "Toko belum ada rekening!" });
+    }
+    console.log(id_toko,req.query.id_payouts)
     res.json({
       status: 200,
       message: "Data rekening bank berhasil diambil",
@@ -33,7 +38,10 @@ async function detailRekeningBank(req, res, next) {
       data: db,
     });
   } catch (error) {
-    res.json(error);
+    res.json({
+      status: 500,
+      message: error.message,
+    });
   }
 }
 
@@ -72,14 +80,17 @@ async function updateRekeningBank(req, res, next) {
 async function deleteRekeningBank(req, res, next) {
   try {
     const db = await toko_payouts.destroy({
-      where: { id_payouts: req.body.id_payouts , id_toko : req.user.id_toko },
+      where: { id_payouts: req.body.id_payouts, id_toko: req.user.id_toko },
     });
 
     if (!req.body.id_payouts) {
       return res.json({ status: 404, message: "id_payouts harus diisi" });
     }
     if (!db) {
-      return res.json({ status: 404, message: "User Data rekening bank tidak ditemukan" });
+      return res.json({
+        status: 404,
+        message: "User Data rekening bank tidak ditemukan",
+      });
     }
     res.json({
       status: 200,
