@@ -47,12 +47,13 @@ async function login(req, res) {
       const token = jwt.sign(payload, secretKey, { expiresIn: "3d" });
 
       // Mengatur cookie dengan token
-      res.cookie("token", token, {
-        httpOnly: true, // Mencegah akses cookie dari JavaScript di client-side
-        secure: false, // Harus diatur ke false untuk localhost (tanpa HTTPS)
-        // sameSite: "strict", // Menghindari pengiriman cookie lintas situs
+      res.cookie('token', token, {
+        httpOnly: true,
+        secure: false, // Set ke true jika menggunakan HTTPS
+        sameSite: 'None', // atau 'Lax' atau 'Strict' sesuai kebutuhan
         maxAge: 3 * 24 * 60 * 60 * 1000, // Cookie berlaku selama 3 hari
       });
+      
 
       res.status(200).json({
         status: 200,
