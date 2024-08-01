@@ -34,7 +34,7 @@ async function login(req, res) {
         email: customer.email,
         verifikasi: customer.verifikasi,
         nama_lengkap: customer.nama_lengkap,
-        id_toko: cekToko.id_toko,
+        id_toko: cekToko.id_toko || null,
       };
 
       if (customer.verifikasi === "T") {
