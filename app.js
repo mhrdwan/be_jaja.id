@@ -27,6 +27,7 @@ app.set("view engine", "jade");
 app.use(
   cors({
     origin: "*",
+    credentials: true,
     methods: ["GET", "POST", "PATCH", "DELETE", "PUT"],
     allowedHeaders:
       "Content-Type, Authorization, Origin, X-Requested-With, Accept",
