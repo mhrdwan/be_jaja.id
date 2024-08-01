@@ -46,19 +46,19 @@ async function login(req, res) {
 
       const token = jwt.sign(payload, secretKey, { expiresIn: "3d" });
 
-      // Mengatur cookie dengan token
-      res.cookie('token', token, {
-        httpOnly: true,
-        secure: false, // Set ke true jika menggunakan HTTPS
-        sameSite: 'Lax', // atau 'Lax' atau 'Strict' sesuai kebutuhan
-        maxAge: 3 * 24 * 60 * 60 * 1000, // Cookie berlaku selama 3 hari
-      });
+      // // Mengatur cookie dengan token
+      // res.cookie('token', token, {
+      //   httpOnly: true,
+      //   secure: false, // Set ke true jika menggunakan HTTPS
+      //   sameSite: 'Lax', // atau 'Lax' atau 'Strict' sesuai kebutuhan
+      //   maxAge: 3 * 24 * 60 * 60 * 1000, // Cookie berlaku selama 3 hari
+      // });
       
 
       res.status(200).json({
         status: 200,
         message: "Login berhasil",
-        // token: token,
+        token: token,
       });
     } else {
       res.status(401).json({
