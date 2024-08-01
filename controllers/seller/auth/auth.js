@@ -50,7 +50,7 @@ async function login(req, res) {
       res.cookie("token", token, {
         httpOnly: true, // Mencegah akses cookie dari JavaScript di client-side
         secure: false, // Harus diatur ke false untuk localhost (tanpa HTTPS)
-        sameSite: "strict", // Menghindari pengiriman cookie lintas situs
+        // sameSite: "strict", // Menghindari pengiriman cookie lintas situs
         maxAge: 3 * 24 * 60 * 60 * 1000, // Cookie berlaku selama 3 hari
       });
 
