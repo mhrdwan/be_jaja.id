@@ -53,7 +53,6 @@ async function login(req, res) {
       //   sameSite: 'Lax', // atau 'Lax' atau 'Strict' sesuai kebutuhan
       //   maxAge: 3 * 24 * 60 * 60 * 1000, // Cookie berlaku selama 3 hari
       // });
-      
 
       res.status(200).json({
         status: 200,
@@ -75,11 +74,11 @@ async function login(req, res) {
 }
 
 async function logout(req, res) {
-  res.clearCookie("token", {
-    httpOnly: true,
-    sameSite: "strict",
-  });
-
+  // res.clearCookie("token", {
+  //   httpOnly: true,
+  //   sameSite: "strict",
+  // });
+  res.redirect("/");
   res.status(200).json({
     status: 200,
     message: "Logout berhasil",
