@@ -24,15 +24,24 @@ var app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
 
+const allowedOrigins = ["http://localhost:5173", "http://localhost:3000"];
+
 app.use(
   cors({
-    origin: "*",
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PATCH", "DELETE", "PUT"],
     allowedHeaders:
       "Content-Type, Authorization, Origin, X-Requested-With, Accept",
   })
 );
+
 // app.use(cors());
 app.options("*", cors());
 var allowCrossDomain = function (req, res, next) {
