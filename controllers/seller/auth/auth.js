@@ -57,7 +57,7 @@ async function login(req, res) {
       res.status(200).json({
         status: 200,
         message: "Login berhasil",
-        token: token,
+        // token: token,
       });
     } else {
       res.status(401).json({
