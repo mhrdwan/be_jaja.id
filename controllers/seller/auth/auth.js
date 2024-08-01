@@ -3,6 +3,7 @@ const { customer: Customer, toko } = require("../../../models");
 const { comparePassword } = require("../../../core/function");
 const secretKey = process.env.SECRET_KEY;
 require("dotenv").config();
+
 async function login(req, res) {
   const { email, password } = req.body;
 
@@ -11,7 +12,6 @@ async function login(req, res) {
       where: { email },
     });
 
-    // Tambahkan pemeriksaan untuk memastikan pelanggan ditemukan
     if (!customer) {
       return res.status(401).json({
         status: 401,
@@ -43,20 +43,21 @@ async function login(req, res) {
           message: "User belum verifikasi, silahkan verifikasi terlebih dahulu",
         });
       }
+
       const token = jwt.sign(payload, secretKey, { expiresIn: "3d" });
 
-      // res.cookie("token", token, {
-      //   httpOnly: true,
-      //   // secure: process.env.NODE_ENV === 'production',
-      //   sameSite: "strict",
-      //   maxAge: 3 * 24 * 60 * 60 * 1000,
-      // });
+      // Mengatur cookie dengan token
+      res.cookie("token", token, {
+        httpOnly: true, // Mencegah akses cookie dari JavaScript di client-side
+        secure: false, // Harus diatur ke false untuk localhost (tanpa HTTPS)
+        sameSite: "strict", // Menghindari pengiriman cookie lintas situs
+        maxAge: 3 * 24 * 60 * 60 * 1000, // Cookie berlaku selama 3 hari
+      });
 
-      res.json({
+      res.status(200).json({
         status: 200,
         message: "Login berhasil",
-        token : token,
-        // cekToko: cekToko,
+        token: token,
       });
     } else {
       res.status(401).json({
