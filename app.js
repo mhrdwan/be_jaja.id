@@ -23,7 +23,6 @@ var app = express();
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
-
 const allowedOrigins = ["http://localhost:5173", "http://localhost:3000"];
 
 app.use(
@@ -37,10 +36,10 @@ app.use(
     },
     credentials: true,
     methods: ["GET", "POST", "PATCH", "DELETE", "PUT"],
-    allowedHeaders:
-      "Content-Type, Authorization, Origin, X-Requested-With, Accept",
+    allowedHeaders: "Content-Type, Authorization, Origin, X-Requested-With, Accept",
   })
 );
+
 
 // app.use(cors());
 app.options("*", cors());
