@@ -11,7 +11,7 @@ async function listPromoToko(req, res, next) {
     const data = await promo_toko.findAndCountAll({
       limit: limit,
       offset: offset,
-    });
+    });   
     res.json({
       status: 200,
       message: suksesMessage().message,

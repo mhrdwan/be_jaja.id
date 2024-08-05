@@ -2,12 +2,14 @@ const { suksesMessage } = require("../../core/message");
 const { daftar_merek } = require("../../models");
 
 async function getBrand(req, res, next) {
-  const id_customer = req.user.id_customer; 
+  const id_customer = req.user.id_customer;
   try {
-    const daftar_mereks = await daftar_merek.findAll({where: {id_user: id_customer}});
+    const daftar_mereks = await daftar_merek.findAll({
+      where: { id_user: id_customer },
+    });
     const data = {
       // dataCookies:daftar_mereks,
-      id_customer:id_customer,
+      id_customer: id_customer,
       message: suksesMessage().message,
       status: suksesMessage().code,
       totalData: daftar_mereks.length,
@@ -39,9 +41,9 @@ async function getDetailBrand(req, res, next) {
     res.json(data);
   } catch (error) {
     res.json({
-      code : 400,
-      message :"Tidak ditemukan"
-    })
+      code: 400,
+      message: "Tidak ditemukan",
+    });
   }
 }
 

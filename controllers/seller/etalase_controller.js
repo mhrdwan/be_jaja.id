@@ -6,7 +6,7 @@ async function getEtalase(req, res, next) {
     const limit = parseInt(req.query.limit) || 10;
     const page = parseInt(req.query.page) || 1;
     const offset = (page - 1) * limit;
-
+    console.log(req.user.id_toko);
     const response = await etalase_toko.findAll({
       where: { id_toko: req.user.id_toko },
       limit: limit,
@@ -19,6 +19,7 @@ async function getEtalase(req, res, next) {
       data: response,
     });
   } catch (error) {
+    console.log(error.message)
     res.status(500).json({ status: 500, message: error.message });
   }
 }
